@@ -39,6 +39,12 @@ export default function Navbar() {
             {"03 // VISUALS"}
           </a>
           <a
+            href="#faq"
+            className="font-mono text-[11px] tracking-[0.16em] text-[#828a9c] hover:text-white transition-colors"
+          >
+            {"FAQ"}
+          </a>
+          <a
             href="#inquiries"
             className="font-mono text-[11px] tracking-[0.16em] text-[#828a9c] hover:text-white transition-colors"
           >
@@ -102,6 +108,13 @@ export default function Navbar() {
             className="block py-2 text-[#828a9c] hover:text-white tracking-[0.16em]"
           >
             {"03 // VISUALS"}
+          </a>
+          <a
+            href="#faq"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block py-2 text-[#828a9c] hover:text-white tracking-[0.16em]"
+          >
+            {"FAQ"}
           </a>
           <a
             href="#inquiries"

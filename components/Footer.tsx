@@ -18,6 +18,9 @@ export default function Footer() {
           <a href="#archive" className="hover:text-white transition-colors">
             ARCHIVE
           </a>
+          <a href="#faq" className="hover:text-white transition-colors">
+            FAQ
+          </a>
           <a href="#inquiries" className="hover:text-white transition-colors">
             BOOKING
           </a>

@@ -3,6 +3,7 @@ import Hero from "@/components/Hero";
 import ArtistStatement from "@/components/ArtistStatement";
 import SoundArchive from "@/components/SoundArchive";
 import CuratedGallery from "@/components/CuratedGallery";
+import FAQ from "@/components/FAQ";
 import Inquiries from "@/components/Inquiries";
 import Footer from "@/components/Footer";
 
@@ -25,6 +26,7 @@ export default function Home() {
         <ArtistStatement />
         <SoundArchive />
         <CuratedGallery />
+        <FAQ />
         <Inquiries />
       </main>
 
