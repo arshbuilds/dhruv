@@ -36,28 +36,33 @@ const TRACKS: Track[] = [
     defaultDuration: 183,
   },
 ];
+
+const BAR_COUNT = 32;
+const BAR_INDICES = Array.from({ length: BAR_COUNT }, (_, i) => i);
+const RESTING_SCALE = 0.2;
+
 export default function SoundArchive() {
   const [activeTrackIndex, setActiveTrackIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [hasLoadedAudio, setHasLoadedAudio] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(TRACKS[0].defaultDuration);
   const [volume, setVolume] = useState(0.85);
   const [isMuted, setIsMuted] = useState(false);
-  const [waveformBars, setWaveformBars] = useState<number[]>(
-    Array.from({ length: 32 }, () => 8),
-  );
 
   const activeTrack = TRACKS[activeTrackIndex];
 
-  // Audio element & Web Audio references
+  // Audio element, DOM refs & Web Audio references
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const animFrameRef = useRef<number | null>(null);
   const progressBarRef = useRef<HTMLDivElement | null>(null);
+  const barRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const pendingSeekRef = useRef<number | null>(null);
 
-  // Initialize Web Audio API Analyser for real-time FFT spectrum
+  // Initialize Web Audio API Analyser on first explicit user playback
   const setupAnalyser = () => {
     if (!audioRef.current || analyserRef.current) return;
 
@@ -90,8 +95,15 @@ export default function SoundArchive() {
     setCurrentTime(0);
     setDuration(TRACKS[index].defaultDuration);
     setIsLoading(true);
+    setHasLoadedAudio(true);
+    pendingSeekRef.current = null;
 
     if (audio) {
+      setupAnalyser();
+      if (audioCtxRef.current && audioCtxRef.current.state === "suspended") {
+        audioCtxRef.current.resume().catch(() => {});
+      }
+
       audio.src = TRACKS[index].src;
       audio.load();
       audio
@@ -139,7 +151,12 @@ export default function SoundArchive() {
     setIsLoading(true);
 
     try {
-      // Try connecting Web Audio Analyser on first play
+      if (!hasLoadedAudio || !audio.getAttribute("src")) {
+        audio.src = activeTrack.src;
+        setHasLoadedAudio(true);
+      }
+
+      // Connect Web Audio Analyser on user gesture
       setupAnalyser();
       if (audioCtxRef.current && audioCtxRef.current.state === "suspended") {
         await audioCtxRef.current.resume();
@@ -171,7 +188,17 @@ export default function SoundArchive() {
     const targetDuration = duration || activeTrack.defaultDuration;
     const targetTime = percentage * targetDuration;
 
-    audioRef.current.currentTime = targetTime;
+    const audio = audioRef.current;
+    if (!hasLoadedAudio || !audio.getAttribute("src")) {
+      audio.src = activeTrack.src;
+      setHasLoadedAudio(true);
+      pendingSeekRef.current = targetTime;
+      audio.load();
+    } else if (audio.readyState >= 1) {
+      audio.currentTime = targetTime;
+    } else {
+      pendingSeekRef.current = targetTime;
+    }
     setCurrentTime(targetTime);
   };
 
@@ -197,32 +224,61 @@ export default function SoundArchive() {
     }
   };
 
-  // Real-time FFT Waveform Engine
+  // Ref-driven FFT Waveform Engine (zero React re-renders; stops completely when idle)
   useEffect(() => {
-    const dataArray = new Uint8Array(32);
+    const setRestingBars = () => {
+      for (let i = 0; i < BAR_COUNT; i++) {
+        const bar = barRefs.current[i];
+        if (bar) {
+          bar.style.transform = `scaleY(${RESTING_SCALE})`;
+        }
+      }
+    };
+
+    if (!isPlaying) {
+      setRestingBars();
+      return;
+    }
+
+    const prefersReducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (prefersReducedMotion) {
+      for (let i = 0; i < BAR_COUNT; i++) {
+        const bar = barRefs.current[i];
+        if (bar) {
+          const staticScale = 0.35 + ((i * 7) % 5) * 0.1;
+          bar.style.transform = `scaleY(${staticScale.toFixed(2)})`;
+        }
+      }
+      return;
+    }
+
+    const dataArray = new Uint8Array(BAR_COUNT);
 
     const updateWaveform = () => {
-      if (analyserRef.current && isPlaying) {
+      if (analyserRef.current) {
         analyserRef.current.getByteFrequencyData(dataArray);
-        const bars = Array.from(dataArray).map((val) => {
-          const normalized = (val / 255) * 46 + 6;
-          return Math.max(6, Math.min(52, Math.round(normalized)));
-        });
-        setWaveformBars(bars);
-      } else if (isPlaying) {
-        // Fallback dynamic pulsing waveform if Web Audio graph is bypassed
-        const now = Date.now() / 140;
-        setWaveformBars(
-          Array.from({ length: 32 }, (_, i) => {
-            const h = Math.sin(i * 0.35 + now) * 16 + 26;
-            return Math.max(6, Math.min(50, Math.round(h)));
-          }),
-        );
+        for (let i = 0; i < BAR_COUNT; i++) {
+          const bar = barRefs.current[i];
+          if (bar) {
+            const scale = Math.max(RESTING_SCALE, Math.min(1, dataArray[i] / 255));
+            bar.style.transform = `scaleY(${scale.toFixed(3)})`;
+          }
+        }
       } else {
-        // Resting state
-        setWaveformBars((prev) =>
-          prev.map((val) => Math.max(8, Math.round(val * 0.9))),
-        );
+        const now = Date.now() / 140;
+        for (let i = 0; i < BAR_COUNT; i++) {
+          const bar = barRefs.current[i];
+          if (bar) {
+            const scale = Math.max(
+              RESTING_SCALE,
+              Math.min(1, (Math.sin(i * 0.35 + now) * 0.35 + 0.55)),
+            );
+            bar.style.transform = `scaleY(${scale.toFixed(3)})`;
+          }
+        }
       }
 
       animFrameRef.current = requestAnimationFrame(updateWaveform);
@@ -230,7 +286,10 @@ export default function SoundArchive() {
 
     animFrameRef.current = requestAnimationFrame(updateWaveform);
     return () => {
-      if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
+      if (animFrameRef.current) {
+        cancelAnimationFrame(animFrameRef.current);
+        animFrameRef.current = null;
+      }
     };
   }, [isPlaying]);
 
@@ -257,6 +316,10 @@ export default function SoundArchive() {
         isFinite(audio.duration)
       ) {
         setDuration(audio.duration);
+      }
+      if (pendingSeekRef.current !== null) {
+        audio.currentTime = pendingSeekRef.current;
+        pendingSeekRef.current = null;
       }
       setIsLoading(false);
     };
@@ -312,8 +375,12 @@ export default function SoundArchive() {
       id="archive"
       className="py-20 lg:py-28 relative border-t border-white/[0.03]"
     >
-      {/* Standard same-origin HTML5 Audio Element */}
-      <audio ref={audioRef} src={activeTrack.src} preload="auto" />
+      {/* Standard same-origin HTML5 Audio Element — zero preload until user interaction */}
+      <audio
+        ref={audioRef}
+        src={hasLoadedAudio ? activeTrack.src : undefined}
+        preload="none"
+      />
 
       <div className="max-w-[1240px] mx-auto px-6 lg:px-12">
         {/* Section Header (Centered) */}
@@ -345,7 +412,6 @@ export default function SoundArchive() {
                     fill
                     className={`object-cover transition-transform duration-700 ${isPlaying ? "scale-105" : "scale-100"}`}
                     sizes="(max-width: 768px) 100vw, 350px"
-                    priority
                   />
                   {isPlaying && (
                     <div className="absolute top-2.5 right-2.5 flex items-center gap-1.5 bg-black/85 backdrop-blur-sm px-2 py-0.5 rounded-[2px] border border-[#e6202e]/50 shadow-[0_0_10px_rgba(230,32,46,0.4)]">
@@ -360,11 +426,14 @@ export default function SoundArchive() {
 
               {/* Dynamic Crimson Waveform Engine */}
               <div className="border border-[#1f2438] bg-[#080911] px-3 py-2.5 rounded-[2px] mt-4 h-14 flex items-end justify-between gap-[2px] overflow-hidden">
-                {waveformBars.map((height, i) => (
+                {BAR_INDICES.map((i) => (
                   <span
                     key={i}
-                    style={{ height: `${height}px` }}
-                    className="flex-1 bg-[#e6202e] rounded-t-[1px] transition-all duration-75 opacity-90 hover:opacity-100"
+                    ref={(el) => {
+                      barRefs.current[i] = el;
+                    }}
+                    style={{ transform: `scaleY(${RESTING_SCALE})` }}
+                    className="flex-1 h-9 origin-bottom bg-[#e6202e] rounded-t-[1px] opacity-90 hover:opacity-100 will-change-transform"
                   />
                 ))}
               </div>

@@ -155,7 +155,6 @@ export default function CuratedGallery() {
                   fill
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                   sizes="(max-width: 1024px) 100vw, 33vw"
-                  priority
                 />
                 <div className="absolute top-4 right-4 bg-black/80 backdrop-blur-sm border border-white/10 px-2 py-0.5 rounded-[2px]">
                   <span className="font-mono text-[8.5px] tracking-[0.2em] text-[#e6202e] uppercase font-semibold">
@@ -329,7 +328,7 @@ export default function CuratedGallery() {
                 fill
                 className="object-contain"
                 sizes="90vw"
-                priority
+                loading="eager"
               />
             </div>
           </div>

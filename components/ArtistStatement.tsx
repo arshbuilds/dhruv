@@ -54,7 +54,6 @@ export default function ArtistStatement() {
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
                 sizes="(max-width: 768px) 100vw, 33vw"
-                priority
               />
             </div>
             <div className="font-mono text-[9.5px] tracking-[0.2em] text-[#e6202e] uppercase mt-3 px-1">

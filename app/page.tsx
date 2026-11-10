@@ -10,12 +10,15 @@ import Footer from "@/components/Footer";
 export default function Home() {
   return (
     <div className="min-h-screen bg-[#080a12] text-slate-200 relative selection:bg-[#e6202e] selection:text-white">
-      {/* Background ambient lighting */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[1100px] h-[550px] bg-gradient-to-b from-[#182035]/30 via-[#0e1220]/15 to-transparent blur-3xl" />
-        <div className="absolute top-[850px] right-0 w-[550px] h-[550px] bg-[#e6202e]/[0.025] blur-[150px]" />
-        <div className="absolute top-[1700px] left-0 w-[550px] h-[550px] bg-[#162035]/[0.04] blur-[140px]" />
-      </div>
+      {/* Background ambient lighting — lightweight radial gradients instead of GPU-heavy full-viewport CSS blurs */}
+      <div
+        aria-hidden="true"
+        className="fixed inset-0 pointer-events-none z-0 overflow-hidden"
+        style={{
+          backgroundImage:
+            "radial-gradient(ellipse 650px 320px at 50% 60px, rgba(24, 32, 53, 0.28), rgba(14, 18, 32, 0.1) 55%, transparent 80%), radial-gradient(circle 340px at 100% 1050px, rgba(230, 32, 46, 0.03), transparent 75%), radial-gradient(circle 340px at 0% 1900px, rgba(22, 32, 53, 0.045), transparent 75%)",
+        }}
+      />
 
       {/* Modular Navigation */}
       <Navbar />
