@@ -32,27 +32,27 @@ export default function ArtistStatement() {
 
         {/* 3 Gallery / Feature Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-end">
-          {/* Card 1: Vintage Microphone */}
+          {/* Card 1: Rectifier Artwork */}
           <div className="border border-[#1f2438] bg-[#0b0d18] p-3 rounded-[2px] group hover:border-slate-500 transition-colors">
-            <div className="relative aspect-[3/4] w-full overflow-hidden bg-black/40">
+            <div className="relative aspect-square w-full overflow-hidden bg-black/40">
               <Image
                 src="/images/rectifier.png"
-                alt="Vintage Microphone bokeh"
+                alt="Rectifier visual artwork"
                 fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                className="object-contain transition-opacity duration-500 group-hover:opacity-95"
                 sizes="(max-width: 768px) 100vw, 33vw"
               />
             </div>
           </div>
 
-          {/* Card 2: Center Featured - Composer on stage (Elevated with red border) */}
+          {/* Card 2: Center Featured - 95' Retro (Elevated with red border) */}
           <div className="border border-[#7e1c27] bg-[#0c0e1a] p-3 rounded-[2px] md:-translate-y-5 shadow-[0_0_25px_rgba(126,28,39,0.22)] group hover:border-[#a82433] transition-all">
-            <div className="relative aspect-[3/4.2] w-full overflow-hidden bg-black/40">
+            <div className="relative aspect-square w-full overflow-hidden bg-black/40">
               <Image
                 src="/images/95retro.png"
-                alt="Dhruv Kanda — The Composer live stage"
+                alt="Dhruv Kanda — The Composer"
                 fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                className="object-contain transition-opacity duration-500 group-hover:opacity-95"
                 sizes="(max-width: 768px) 100vw, 33vw"
               />
             </div>
@@ -61,14 +61,14 @@ export default function ArtistStatement() {
             </div>
           </div>
 
-          {/* Card 3: Concert Crowd Stadium */}
+          {/* Card 3: Tarkash Artwork */}
           <div className="border border-[#1f2438] bg-[#0b0d18] p-3 rounded-[2px] group hover:border-slate-500 transition-colors">
-            <div className="relative aspect-[3/4] w-full overflow-hidden bg-black/40">
+            <div className="relative aspect-square w-full overflow-hidden bg-black/40">
               <Image
                 src="/images/tarkash.png"
-                alt="Live Concert Crowd & Confetti"
+                alt="Tarkash visual artwork"
                 fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                className="object-contain transition-opacity duration-500 group-hover:opacity-95"
                 sizes="(max-width: 768px) 100vw, 33vw"
               />
             </div>

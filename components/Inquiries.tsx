@@ -90,12 +90,12 @@ export default function Inquiries() {
                 <div>
                   <span className="text-[#e6202e] font-semibold">INSTAGRAM: </span>
                   <a
-                    href="https://instagram.com/dhruv.kanda819"
+                    href="https://instagram.com/dhruv.kanda619"
                     target="_blank"
                     rel="noreferrer"
                     className="text-slate-200 hover:text-white transition-colors"
                   >
-                    @DHRUV.KANDA819
+                    @DHRUV.KANDA619
                   </a>
                 </div>
               </div>

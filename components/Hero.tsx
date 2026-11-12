@@ -130,7 +130,7 @@ export default function Hero() {
           <div className="lg:col-span-5 xl:col-span-5 z-10 lg:pl-4">
             <div className="border border-[#751b25] bg-[#0b0d18]/90 backdrop-blur-md p-6 sm:p-7 rounded-[2px] relative shadow-[0_4px_30px_rgba(0,0,0,0.55)]">
               <div className="font-mono text-[10px] tracking-[0.2em] text-[#e6202e] uppercase mb-3.5">
-                {"// ARTIST REF: @DHRUV.KANDA819"}
+                {"// ARTIST REF: @DHRUV.KANDA619"}
               </div>
 
               <p className="font-serif italic text-[#f1f5f9] text-[14.5px] sm:text-[15.5px] leading-relaxed my-3 font-normal">

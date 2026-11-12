@@ -404,13 +404,19 @@ export default function SoundArchive() {
             {/* Left Column: Vinyl Mockup + Dynamic Crimson Waveform */}
             <div className="md:col-span-5 flex flex-col justify-between h-full">
               {/* Vinyl Art Container */}
-              <div className="border border-[#751b25] bg-[#080911] p-2.5 rounded-[2px] relative group overflow-hidden shadow-[0_0_20px_rgba(117,27,37,0.2)]">
-                <div className="relative aspect-[199/276] w-full overflow-hidden bg-black/60 rounded-[1px]">
+              <div
+                className={`border bg-[#080911] p-2.5 rounded-[2px] relative group overflow-hidden transition-all duration-500 ${
+                  isPlaying
+                    ? "border-[#e6202e] shadow-[0_0_28px_rgba(230,32,46,0.35)]"
+                    : "border-[#751b25] shadow-[0_0_20px_rgba(117,27,37,0.2)]"
+                }`}
+              >
+                <div className="relative aspect-square w-full overflow-hidden bg-black/60 rounded-[1px]">
                   <Image
                     src={activeTrack.coverImage}
                     alt={`${activeTrack.title} - Vinyl release art`}
                     fill
-                    className={`object-cover transition-transform duration-700 ${isPlaying ? "scale-105" : "scale-100"}`}
+                    className="object-contain"
                     sizes="(max-width: 768px) 100vw, 350px"
                   />
                   {isPlaying && (

@@ -10,7 +10,8 @@ interface GalleryItem {
   category: "EDITORIAL" | "STUDIO";
   src: string;
   alt: string;
-  aspect: "portrait" | "landscape";
+  width: number;
+  height: number;
   tag: string;
   hasRedBorder?: boolean;
 }
@@ -23,7 +24,8 @@ const GALLERY_ITEMS: GalleryItem[] = [
     category: "EDITORIAL",
     src: "/images/gallery_noir.jpg",
     alt: "Dhruv Kanda — Nocturnal architectural sanctuary with glowing orbs",
-    aspect: "portrait",
+    width: 473,
+    height: 1024,
     tag: "0.721 // AMBIENT SPACE",
   },
   {
@@ -33,7 +35,8 @@ const GALLERY_ITEMS: GalleryItem[] = [
     category: "STUDIO",
     src: "/images/gallery_autotune.jpg",
     alt: "Studio workstation running Auto-Tune Pro vocal session with keyboard illumination",
-    aspect: "landscape",
+    width: 1024,
+    height: 768,
     tag: "432 HZ // VOCAL LAB",
     hasRedBorder: true,
   },
@@ -44,7 +47,8 @@ const GALLERY_ITEMS: GalleryItem[] = [
     category: "STUDIO",
     src: "/images/gallery_studio_wide.jpg",
     alt: "FL Studio multi-track mixing console across dual-monitor workspace",
-    aspect: "landscape",
+    width: 1024,
+    height: 768,
     tag: "NEO-SOUL // DAW SESSION",
   },
   {
@@ -54,7 +58,8 @@ const GALLERY_ITEMS: GalleryItem[] = [
     category: "EDITORIAL",
     src: "/images/retroVibes.jpeg",
     alt: "Dhruv Kanda — '95 Retro cyberpunk neon illuminated cityscape and tracklist",
-    aspect: "landscape",
+    width: 1024,
+    height: 1024,
     tag: "0.721 // CITY ARCHIVE",
   },
 ];
@@ -140,30 +145,31 @@ export default function CuratedGallery() {
           ))}
         </div>
 
-        {/* Bento Gallery Grid */}
+        {/* Bento Gallery Grid — Uncropped Natural Aspect Frames */}
         {activeCategory === "ALL" ? (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-            {/* Frame 01: Tall Architectural Sanctuary (Span 4 cols, 2 rows) */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            {/* Frame 01: Tall Architectural Sanctuary (Left Column, 5 cols) */}
             <div
               onClick={() => openLightbox(0)}
-              className="lg:col-span-4 border border-[#1f2438] bg-[#0b0d18] p-3 rounded-[2px] relative group hover:border-slate-400 transition-all cursor-pointer flex flex-col min-h-[460px] lg:min-h-[580px]"
+              className="lg:col-span-5 border border-[#1f2438] bg-[#0b0d18] p-3 rounded-[2px] group hover:border-slate-400 transition-all cursor-pointer flex flex-col"
             >
-              <div className="relative h-full w-full overflow-hidden bg-black/50 rounded-[1px] min-h-[440px]">
+              <div className="w-full overflow-hidden bg-black/50 rounded-[1px]">
                 <Image
                   src={GALLERY_ITEMS[0].src}
                   alt={GALLERY_ITEMS[0].alt}
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  sizes="(max-width: 1024px) 100vw, 33vw"
+                  width={GALLERY_ITEMS[0].width}
+                  height={GALLERY_ITEMS[0].height}
+                  className="w-full h-auto block transition-opacity duration-500 group-hover:opacity-95"
+                  sizes="(max-width: 1024px) 100vw, 42vw"
                 />
-                <div className="absolute top-4 right-4 bg-black/80 backdrop-blur-sm border border-white/10 px-2 py-0.5 rounded-[2px]">
-                  <span className="font-mono text-[8.5px] tracking-[0.2em] text-[#e6202e] uppercase font-semibold">
+              </div>
+              <div className="mt-3 pt-2.5 border-t border-white/[0.06] flex items-center justify-between gap-2 px-1">
+                <span className="font-mono text-[9px] tracking-[0.18em] text-slate-200 uppercase truncate">
+                  {`FRAME ${GALLERY_ITEMS[0].frameNumber} // ${GALLERY_ITEMS[0].title}`}
+                </span>
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="font-mono text-[8px] tracking-[0.18em] text-[#e6202e] uppercase font-semibold hidden sm:inline">
                     {GALLERY_ITEMS[0].tag}
-                  </span>
-                </div>
-                <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between bg-black/85 backdrop-blur-sm border border-white/10 px-3 py-1.5 rounded-[2px]">
-                  <span className="font-mono text-[9px] tracking-[0.2em] text-slate-200 uppercase">
-                    {`FRAME ${GALLERY_ITEMS[0].frameNumber} // ${GALLERY_ITEMS[0].title}`}
                   </span>
                   <span className="text-slate-400 text-xs group-hover:text-white group-hover:translate-x-0.5 transition-all">
                     ↗
@@ -172,92 +178,95 @@ export default function CuratedGallery() {
               </div>
             </div>
 
-            {/* Right Side Stack: Frame 02 Top (Span 8 cols) + Frames 03 & 04 Bottom (4 cols each) */}
-            <div className="lg:col-span-8 flex flex-col gap-6 justify-between">
-              {/* Frame 02: Auto-Tune Pro Vocal Lab (with signature crimson border) */}
-              <div
-                onClick={() => openLightbox(1)}
-                className="border border-[#751b25] bg-[#0c0e18] p-3 rounded-[2px] relative group hover:border-[#a82433] transition-all shadow-[0_0_20px_rgba(117,27,37,0.18)] cursor-pointer flex flex-col h-[275px]"
-              >
-                <div className="relative h-full w-full overflow-hidden bg-black/50 rounded-[1px]">
-                  <Image
-                    src={GALLERY_ITEMS[1].src}
-                    alt={GALLERY_ITEMS[1].alt}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    sizes="(max-width: 1024px) 100vw, 66vw"
-                  />
-                  <div className="absolute top-4 right-4 bg-black/85 backdrop-blur-sm border border-[#751b25] px-2 py-0.5 rounded-[2px]">
-                    <span className="font-mono text-[8.5px] tracking-[0.2em] text-[#e6202e] uppercase font-semibold">
-                      {GALLERY_ITEMS[1].tag}
-                    </span>
+            {/* Right Column (7 cols): Frames 02 & 03 Side-by-Side (both 4:3) + Frame 04 Full Square */}
+            <div className="lg:col-span-7 flex flex-col gap-6">
+              {/* Top Row: Studio Frames 02 & 03 (exact matching 4:3 proportions) */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-start">
+                {/* Frame 02: Auto-Tune Pro Vocal Lab (with signature crimson border) */}
+                <div
+                  onClick={() => openLightbox(1)}
+                  className="border border-[#751b25] bg-[#0c0e18] p-3 rounded-[2px] group hover:border-[#a82433] transition-all shadow-[0_0_20px_rgba(117,27,37,0.18)] cursor-pointer flex flex-col"
+                >
+                  <div className="w-full overflow-hidden bg-black/50 rounded-[1px]">
+                    <Image
+                      src={GALLERY_ITEMS[1].src}
+                      alt={GALLERY_ITEMS[1].alt}
+                      width={GALLERY_ITEMS[1].width}
+                      height={GALLERY_ITEMS[1].height}
+                      className="w-full h-auto block transition-opacity duration-500 group-hover:opacity-95"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 28vw"
+                    />
                   </div>
-                  <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between bg-black/85 backdrop-blur-sm border border-[#751b25] px-3 py-1.5 rounded-[2px]">
-                    <span className="font-mono text-[9px] tracking-[0.2em] text-[#e6202e] uppercase font-medium">
+                  <div className="mt-3 pt-2.5 border-t border-[#751b25]/50 flex items-center justify-between gap-2 px-1">
+                    <span className="font-mono text-[8.5px] tracking-[0.16em] text-[#e6202e] uppercase font-medium truncate">
                       {`FRAME ${GALLERY_ITEMS[1].frameNumber} // ${GALLERY_ITEMS[1].title}`}
                     </span>
-                    <span className="text-[#e6202e] text-xs group-hover:translate-x-0.5 transition-all">
+                    <span className="text-[#e6202e] text-xs shrink-0 group-hover:translate-x-0.5 transition-all">
+                      ↗
+                    </span>
+                  </div>
+                </div>
+
+                {/* Frame 03: Studio Console Wide */}
+                <div
+                  onClick={() => openLightbox(2)}
+                  className="border border-[#1f2438] bg-[#0b0d18] p-3 rounded-[2px] group hover:border-slate-400 transition-all cursor-pointer flex flex-col"
+                >
+                  <div className="w-full overflow-hidden bg-black/50 rounded-[1px]">
+                    <Image
+                      src={GALLERY_ITEMS[2].src}
+                      alt={GALLERY_ITEMS[2].alt}
+                      width={GALLERY_ITEMS[2].width}
+                      height={GALLERY_ITEMS[2].height}
+                      className="w-full h-auto block transition-opacity duration-500 group-hover:opacity-95"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 28vw"
+                    />
+                  </div>
+                  <div className="mt-3 pt-2.5 border-t border-white/[0.06] flex items-center justify-between gap-2 px-1">
+                    <span className="font-mono text-[8.5px] tracking-[0.16em] text-slate-300 uppercase truncate">
+                      {`FRAME ${GALLERY_ITEMS[2].frameNumber} // ${GALLERY_ITEMS[2].title}`}
+                    </span>
+                    <span className="text-slate-400 text-xs shrink-0 group-hover:text-white group-hover:translate-x-0.5 transition-all">
                       ↗
                     </span>
                   </div>
                 </div>
               </div>
 
-              {/* Bottom Row: Frame 03 and Frame 04 */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 h-[275px]">
-                {/* Frame 03: Studio Console Wide */}
-                <div
-                  onClick={() => openLightbox(2)}
-                  className="border border-[#1f2438] bg-[#0b0d18] p-3 rounded-[2px] relative group hover:border-slate-400 transition-all cursor-pointer flex flex-col h-full"
-                >
-                  <div className="relative h-full w-full overflow-hidden bg-black/50 rounded-[1px]">
-                    <Image
-                      src={GALLERY_ITEMS[2].src}
-                      alt={GALLERY_ITEMS[2].alt}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-105"
-                      sizes="(max-width: 768px) 100vw, 33vw"
-                    />
-                    <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between bg-black/85 backdrop-blur-sm border border-white/10 px-2.5 py-1.5 rounded-[2px]">
-                      <span className="font-mono text-[8.5px] tracking-[0.18em] text-slate-300 uppercase truncate">
-                        {`FRAME ${GALLERY_ITEMS[2].frameNumber} // ${GALLERY_ITEMS[2].title}`}
-                      </span>
-                      <span className="text-slate-400 text-xs ml-1 shrink-0 group-hover:text-white transition-all">
-                        ↗
-                      </span>
-                    </div>
-                  </div>
+              {/* Bottom Row: Frame 04 Full Square Showcase */}
+              <div
+                onClick={() => openLightbox(3)}
+                className="border border-[#1f2438] bg-[#0b0d18] p-3 rounded-[2px] group hover:border-slate-400 transition-all cursor-pointer flex flex-col"
+              >
+                <div className="w-full overflow-hidden bg-black/50 rounded-[1px]">
+                  <Image
+                    src={GALLERY_ITEMS[3].src}
+                    alt={GALLERY_ITEMS[3].alt}
+                    width={GALLERY_ITEMS[3].width}
+                    height={GALLERY_ITEMS[3].height}
+                    className="w-full h-auto block transition-opacity duration-500 group-hover:opacity-95"
+                    sizes="(max-width: 1024px) 100vw, 58vw"
+                  />
                 </div>
-
-                {/* Frame 04: Condenser Microphone Signal Capture */}
-                <div
-                  onClick={() => openLightbox(3)}
-                  className="border border-[#1f2438] bg-[#0b0d18] p-3 rounded-[2px] relative group hover:border-slate-400 transition-all cursor-pointer flex flex-col h-full"
-                >
-                  <div className="relative h-full w-full overflow-hidden bg-black/50 rounded-[1px]">
-                    <Image
-                      src={GALLERY_ITEMS[3].src}
-                      alt={GALLERY_ITEMS[3].alt}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-105"
-                      sizes="(max-width: 768px) 100vw, 33vw"
-                    />
-                    <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between bg-black/85 backdrop-blur-sm border border-white/10 px-2.5 py-1.5 rounded-[2px]">
-                      <span className="font-mono text-[8.5px] tracking-[0.18em] text-slate-300 uppercase truncate">
-                        {`FRAME ${GALLERY_ITEMS[3].frameNumber} // ${GALLERY_ITEMS[3].title}`}
-                      </span>
-                      <span className="text-slate-400 text-xs ml-1 shrink-0 group-hover:text-white transition-all">
-                        ↗
-                      </span>
-                    </div>
+                <div className="mt-3 pt-2.5 border-t border-white/[0.06] flex items-center justify-between gap-2 px-1">
+                  <span className="font-mono text-[9px] tracking-[0.18em] text-slate-200 uppercase truncate">
+                    {`FRAME ${GALLERY_ITEMS[3].frameNumber} // ${GALLERY_ITEMS[3].title}`}
+                  </span>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <span className="font-mono text-[8px] tracking-[0.18em] text-[#e6202e] uppercase font-semibold hidden sm:inline">
+                      {GALLERY_ITEMS[3].tag}
+                    </span>
+                    <span className="text-slate-400 text-xs group-hover:text-white group-hover:translate-x-0.5 transition-all">
+                      ↗
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         ) : (
-          /* Filtered Category Grid */
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          /* Filtered Category Grid — Uncropped Natural Aspect Frames */
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
             {filteredItems.map((item) => {
               const globalIdx = GALLERY_ITEMS.findIndex((g) => g.id === item.id);
               return (
@@ -266,24 +275,39 @@ export default function CuratedGallery() {
                   onClick={() => openLightbox(globalIdx)}
                   className={`border ${
                     item.hasRedBorder ? "border-[#751b25] bg-[#0c0e18]" : "border-[#1f2438] bg-[#0b0d18]"
-                  } p-3 rounded-[2px] relative group hover:border-slate-400 transition-all cursor-pointer flex flex-col h-[320px]`}
+                  } p-3 rounded-[2px] group hover:border-slate-400 transition-all cursor-pointer flex flex-col`}
                 >
-                  <div className="relative h-full w-full overflow-hidden bg-black/50 rounded-[1px]">
+                  <div className="w-full overflow-hidden bg-black/50 rounded-[1px]">
                     <Image
                       src={item.src}
                       alt={item.alt}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-105"
-                      sizes="(max-width: 768px) 100vw, 33vw"
+                      width={item.width}
+                      height={item.height}
+                      className="w-full h-auto block transition-opacity duration-500 group-hover:opacity-95"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
-                    <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between bg-black/85 backdrop-blur-sm border border-white/10 px-3 py-1.5 rounded-[2px]">
-                      <span className="font-mono text-[9px] tracking-[0.2em] text-slate-200 uppercase truncate">
-                        {`FRAME ${item.frameNumber} // ${item.title}`}
-                      </span>
-                      <span className="text-slate-400 text-xs group-hover:text-white transition-all">
-                        ↗
-                      </span>
-                    </div>
+                  </div>
+                  <div
+                    className={`mt-3 pt-2.5 border-t ${
+                      item.hasRedBorder ? "border-[#751b25]/50" : "border-white/[0.06]"
+                    } flex items-center justify-between gap-2 px-1`}
+                  >
+                    <span
+                      className={`font-mono text-[9px] tracking-[0.18em] uppercase truncate ${
+                        item.hasRedBorder ? "text-[#e6202e] font-medium" : "text-slate-200"
+                      }`}
+                    >
+                      {`FRAME ${item.frameNumber} // ${item.title}`}
+                    </span>
+                    <span
+                      className={`text-xs shrink-0 transition-all ${
+                        item.hasRedBorder
+                          ? "text-[#e6202e] group-hover:translate-x-0.5"
+                          : "text-slate-400 group-hover:text-white group-hover:translate-x-0.5"
+                      }`}
+                    >
+                      ↗
+                    </span>
                   </div>
                 </div>
               );

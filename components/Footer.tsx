@@ -8,7 +8,7 @@ export default function Footer() {
 
         <div className="flex items-center gap-8 font-mono text-[10.5px] tracking-[0.2em] text-[#6d7589]">
           <a
-            href="https://instagram.com/dhruv.kanda819"
+            href="https://instagram.com/dhruv.kanda619"
             target="_blank"
             rel="noreferrer"
             className="hover:text-white transition-colors"
